@@ -1,0 +1,10 @@
+<span class="d-flex align-items-center">
+    🛒 <span class="ms-2 d-none d-md-inline">Carrinho</span>
+</span>
+
+{% if pedido and pedido.total_itens > 0 %}
+<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+    {{ pedido.total_itens }}
+    <span class="visually-hidden">itens no carrinho</span>
+</span>
+{% endif %}

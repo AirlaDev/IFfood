@@ -1,0 +1,20 @@
+{% with current_status=pedido.status %}
+<ul class="timeline">
+    <li class="timeline-item {% if current_status in 'solicitado,em_preparo,saiu_para_entrega,entregue' %}active{% endif %}">
+        <div class="timeline-icon">🔔</div>
+        <div class="timeline-content">Solicitado</div>
+    </li>
+    <li class="timeline-item {% if current_status in 'em_preparo,saiu_para_entrega,entregue' %}active{% endif %}">
+        <div class="timeline-icon">🍳</div>
+        <div class="timeline-content">Em Preparo</div>
+    </li>
+    <li class="timeline-item {% if current_status in 'saiu_para_entrega,entregue' %}active{% endif %}">
+        <div class="timeline-icon">🛵</div>
+        <div class="timeline-content">Saiu para Entrega</div>
+    </li>
+    <li class="timeline-item {% if current_status == 'entregue' %}active{% endif %}">
+        <div class="timeline-icon">✅</div>
+        <div class="timeline-content">Entregue</div>
+    </li>
+</ul>
+{% endwith %}

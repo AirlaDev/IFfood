@@ -39,6 +39,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_htmx.middleware.HtmxMiddleware',
 ]
 
 ROOT_URLCONF = 'iffood.urls'
@@ -108,14 +109,11 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Define a URL para onde os usuários não logados são redirecionados
-LOGIN_URL = 'login'
-
 # Define a página para onde o usuário é levado após o login
-LOGIN_REDIRECT_URL = '/restaurante/'
+LOGIN_REDIRECT_URL = '/restaurante/dashboard/'
 
 # Define a página para onde o usuário é levado após o logout
-LOGOUT_REDIRECT_URL = 'login'
+LOGOUT_REDIRECT_URL = 'restaurant:login'
 
 # Configuração para encontrar nossos arquivos estáticos (CSS)
 STATIC_URL = '/static/'

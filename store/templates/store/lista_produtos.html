@@ -1,16 +1,20 @@
 {% extends "store/base.html" %}
 
 {% block content %}
-<div class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-white shadow-sm">
-    <div class="col-lg-8 px-0">
-      <h1 class="display-4 fst-italic">Os Sabores que Você Ama, à Distância de um Clique</h1>
-      <p class="lead my-3">Explore os cardápios dos melhores restaurantes da região e receba seus pratos favoritos no conforto da sua casa.</p>
-    </div>
+<div class="d-flex justify-content-between align-items-center pb-2 border-bottom mb-4">
+    {% if search_term %}
+        <h2 class="h3">Resultados para: <span class="text-primary">"{{ search_term }}"</span></h2>
+    {% else %}
+        <h2 class="h3">Nossos Produtos</h2>
+    {% endif %}
 </div>
 
-<h2 class="pb-2 border-bottom">Nossos Produtos</h2>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-4" 
+     hx-get="{% url 'store:lista_produtos' %}" 
+     hx-trigger="every 10s" 
+     hx-select=".row" 
+     hx-swap="outerHTML">
 
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-4">
     {% for produto in produtos %}
     <div class="col">
         <div class="card shadow-sm h-100 product-card">
@@ -22,7 +26,7 @@
             
             <div class="card-body d-flex flex-column">
                 <h5 class="card-title">{{ produto.nome }}</h5>
-                <p class="card-text small text-muted flex-grow-1">{{ produto.descricao }}</p>
+                <p class="card-text small text-muted flex-grow-1">{{ produto.descricao|truncatewords:15 }}</p>
                 <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
                     <span class="fs-5 fw-bold text-primary">R$ {{ produto.preco|stringformat:".2f" }}</span>
                     {% if user.is_authenticated %}
@@ -30,7 +34,6 @@
                                 hx-post="{% url 'store:adicionar_ao_carrinho' produto.id %}"
                                 hx-target="#cart-button"
                                 hx-swap="innerHTML"
-                                hx-trigger="click"
                                 _="on htmx:afterRequest trigger itemAdicionado">
                             + Adicionar
                         </button>
@@ -40,6 +43,14 @@
                 </div>
             </div>
         </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        {% if search_term %}
+            <p class="text-center text-muted fs-5 mt-5">Nenhum produto encontrado.</p>
+        {% else %}
+            <p class="text-center text-muted fs-5 mt-5">Nenhum produto disponível.</p>
+        {% endif %}
     </div>
     {% endfor %}
 </div>
