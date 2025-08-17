@@ -1,18 +1,18 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
-from django.http import HttpResponse
-from django.views.decorators.http import require_POST
+# ADICIONE A LINHA ABAIXO
+from django.http import JsonResponse
 from .models import Produto
 from .forms import ProdutoForm
-from store.models import Pedido # Importa o modelo Pedido do app 'store'
+from store.models import Pedido
 
-# --- AUTENTICAÇÃO DO RESTAURANTE ---
-# A classe que estava faltando provavelmente é esta:
+# --- AUTENTICAÇÃO (sem alterações) ---
 class CustomLoginView(LoginView):
     template_name = 'restaurant/login.html'
 
-# --- CRUD DE PRODUTOS ---
+# --- CRUD DE PRODUTOS (COM JAVASCRIPT/AJAX) ---
+
 @login_required
 def visualizar_produto(request):
     produtos = Produto.objects.all().order_by('nome')
@@ -22,59 +22,65 @@ def visualizar_produto(request):
 @login_required
 def adicionar_produto(request):
     if request.method == 'POST':
-        form = ProdutoForm(request.POST)
+        form = ProdutoForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('restaurant:visualizar_produto')
-    else:
-        form = ProdutoForm()
-    context = {'form': form, 'page_title': 'Adicionar Produto'}
-    return render(request, 'restaurant/product_form.html', context)
+            return JsonResponse({'success': True})
+        return JsonResponse({'success': False, 'errors': form.errors})
+    
+    form = ProdutoForm()
+    context = {
+        'form': form,
+        'page_title': 'Adicionar Novo Produto',
+        'action_url': request.path
+    }
+    return render(request, 'restaurant/partials/_form_partial.html', context)
 
 @login_required
 def editar_produto(request, pk):
     produto = get_object_or_404(Produto, pk=pk)
     if request.method == 'POST':
-        form = ProdutoForm(request.POST, instance=produto)
+        form = ProdutoForm(request.POST, request.FILES, instance=produto)
         if form.is_valid():
             form.save()
-            response = HttpResponse(status=204)
-            response['HX-Refresh'] = 'true'
-            return response
-    else:
-        form = ProdutoForm(instance=produto)
-    context = {'form': form, 'page_title': 'Editar Produto'}
-    if request.headers.get('HX-Request') == 'true':
-        return render(request, 'restaurant/partials/_form_partial.html', context)
-    else:
-        return render(request, 'restaurant/product_form.html', context)
+            return JsonResponse({'success': True})
+        return JsonResponse({'success': False, 'errors': form.errors})
+    
+    form = ProdutoForm(instance=produto)
+    context = {
+        'form': form,
+        'page_title': 'Editar Produto',
+        'action_url': request.path
+    }
+    return render(request, 'restaurant/partials/_form_partial.html', context)
 
 @login_required
 def deletar_produto(request, pk):
     produto = get_object_or_404(Produto, pk=pk)
     if request.method == 'POST':
         produto.delete()
-        response = HttpResponse(status=204)
-        response['HX-Refresh'] = 'true'
-        return response
+        return JsonResponse({'success': True})
+    
     context = {'object': produto}
-    if request.headers.get('HX-Request') == 'true':
-        return render(request, 'restaurant/partials/_delete_partial.html', context)
-    else:
-        return render(request, 'restaurant/product_confirm_delete.html', context)
+    return render(request, 'restaurant/partials/_delete_partial.html', context)
 
-# --- GESTÃO DE PEDIDOS ---
+
 @login_required
 def gestao_pedidos(request):
     pedidos_solicitados = Pedido.objects.filter(finalizado=True, status='solicitado').order_by('data_pedido')
     pedidos_em_preparo = Pedido.objects.filter(finalizado=True, status='em_preparo').order_by('data_pedido')
     pedidos_em_entrega = Pedido.objects.filter(finalizado=True, status='saiu_para_entrega').order_by('data_pedido')
-    pedidos_finalizados = Pedido.objects.filter(finalizado=True, status='entregue').order_by('-data_pedido')[:10]
+    pedidos_finalizados = Pedido.objects.filter(finalizado=True, status='entregue').order_by('-data_pedido')[:15]
+
+    # Soma os pedidos que ainda não foram finalizados para o card de "Total"
+    total_pedidos = pedidos_solicitados.count() + pedidos_em_preparo.count() + pedidos_em_entrega.count()
+
     context = {
         'pedidos_solicitados': pedidos_solicitados,
         'pedidos_em_preparo': pedidos_em_preparo,
         'pedidos_em_entrega': pedidos_em_entrega,
         'pedidos_finalizados': pedidos_finalizados,
+        'total_pedidos': total_pedidos,
     }
     return render(request, 'restaurant/gestao_pedidos.html', context)
 
@@ -96,7 +102,6 @@ def _recarregar_kanban(request):
     }
     return render(request, 'restaurant/partials/_kanban_board_content.html', context)
 
-@require_POST
 @login_required
 def aceitar_pedido(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
@@ -104,7 +109,6 @@ def aceitar_pedido(request, pedido_id):
     pedido.save()
     return _recarregar_kanban(request)
 
-@require_POST
 @login_required
 def marcar_como_em_entrega(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
@@ -112,7 +116,6 @@ def marcar_como_em_entrega(request, pedido_id):
     pedido.save()
     return _recarregar_kanban(request)
 
-@require_POST
 @login_required
 def marcar_como_finalizado(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)

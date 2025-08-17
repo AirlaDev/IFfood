@@ -1,146 +1,87 @@
+/* ================================================= */
+/* === ESTILOS GLOBAIS DO PROJETO IFFOOD === */
+/* ================================================= */
+
+/* --- Paleta de Cores e Variáveis --- */
 :root {
-    --if-primary: #f8633e; /* Laranja da imagem */
-    --if-primary-dark: #e8532e;
-    --if-secondary: #f8f9fa;
+    --if-primary: #f8633e;
+    --if-primary-dark: #e8522e;
     --if-background: #f4f5f7;
     --if-text: #333;
-    --if-text-light: #777;
-    --if-success: #28a745;
-    --if-danger: #dc3545;
-    --if-white: #fff;
+    --if-text-light: #6c757d;
     --if-border: #dee2e6;
+    --bs-primary: var(--if-primary);
+    --bs-primary-rgb: 248, 99, 62;
 }
 
+/* --- Estilos Gerais --- */
 body {
     background-color: var(--if-background);
     color: var(--if-text);
     font-family: 'Poppins', sans-serif;
 }
 
-/* --- Layout Principal --- */
+/* --- Layout da Sidebar --- */
 .sidebar {
-    background-color: var(--if-white);
-    min-height: 100vh;
+    width: 280px;
     border-right: 1px solid var(--if-border);
 }
 .sidebar .nav-link {
     color: var(--if-text-light);
     font-weight: 500;
+    border-radius: 8px;
 }
 .sidebar .nav-link.active, .sidebar .nav-link:hover {
     color: var(--if-primary);
     background-color: #ffeadd;
-    border-radius: 8px;
 }
 
-/* --- Botões --- */
-.btn-primary {
-    background-color: var(--if-primary);
-    border-color: var(--if-primary);
-    font-weight: 600;
-    padding: 0.75rem 1.25rem;
-    border-radius: 8px;
-}
-.btn-primary:hover {
-    background-color: var(--if-primary-dark);
-    border-color: var(--if-primary-dark);
-}
+/* ================================================= */
+/* === ESTILOS PARA A PÁGINA DE GESTÃO DE PEDIDOS === */
+/* ================================================= */
 
-/* --- Cards de Produto --- */
-.card-product {
-    background-color: var(--if-white);
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    transition: transform 0.2s;
-}
-.card-product:hover {
-    transform: translateY(-5px);
-}
-.card-product-actions a {
-    margin-right: 0.5rem;
-}
-
-/* --- Formulários --- */
-.form-control, .form-select {
-    border-radius: 8px;
-    padding: 0.75rem;
-}
-.form-control:focus {
-    border-color: var(--if-primary);
-    box-shadow: 0 0 0 0.25rem rgba(248, 99, 62, 0.25);
-}
-
-/* Paleta de Cores e Configurações Globais */
-:root {
-    --if-primary: #f8633e; /* Laranja principal, inspirado nas imagens */
-    --if-primary-dark: #e8532e;
-    --bs-primary: var(--if-primary);
-    --bs-primary-rgb: 248, 99, 62;
-    --bs-link-color-rgb: 248, 99, 62;
-    --bs-link-hover-color-rgb: 232, 83, 46;
-}
-
-body {
-    font-family: 'Poppins', sans-serif;
-}
-
-/* --- Componentes do Restaurante --- */
-.sidebar {
+/* --- Card de Resumo (Topo) --- */
+.summary-card {
     background-color: #fff;
-    min-height: 100vh;
-    border-right: 1px solid #dee2e6;
+    border: 1px solid var(--if-border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
-.sidebar .nav-link {
-    color: #777;
-    font-weight: 500;
+
+.summary-card .icon {
+    font-size: 1.5rem;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #f0f0f0;
 }
-.sidebar .nav-link.active, .sidebar .nav-link:hover {
-    color: var(--if-primary);
-    background-color: #ffeadd;
+
+.summary-card .value {
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.summary-card .title {
+    font-size: 0.9rem;
+    color: var(--if-text-light);
+}
+
+/* --- Card de Pedido (Kanban) --- */
+.order-card {
+    background-color: #fff;
+    border: 1px solid #e9ecef;
     border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
 }
-
-/* --- ESTILOS MODERNOS PARA A LOJA DO CLIENTE --- */
-
-/* Ajustes no botão primário */
-.btn-primary {
-    background-color: var(--if-primary);
-    border-color: var(--if-primary);
-    font-weight: 600;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    transition: background-color 0.2s ease-in-out;
-}
-.btn-primary:hover {
-    background-color: var(--if-primary-dark);
-    border-color: var(--if-primary-dark);
-}
-
-/* Estilos para os Cards de Produto */
-.product-card {
-    border: none;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-}
-
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
-}
-
-.product-card-img {
-    height: 200px;
-    object-fit: cover; /* Garante que a imagem cubra a área sem distorcer */
-}
-
-/* Ícone do Carrinho */
-#cart-button .badge {
-    font-size: 0.6em;
-    padding: 0.3em 0.5em;
-}
-
-/* Ajustes gerais */
-.form-control:focus {
-    border-color: var(--if-primary);
-    box-shadow: 0 0 0 0.25rem rgba(248, 99, 62, 0.25);
+.order-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
 }

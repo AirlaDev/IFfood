@@ -1,33 +1,25 @@
-<a href="#" class="list-group-item list-group-item-action mb-2" 
-   hx-get="{% url 'restaurant:detalhes_pedido' pedido.id %}"
-   hx-target="#modal-content-wrapper"
-   data-bs-toggle="modal" 
-   data-bs-target="#actionModal">
-    <div class="d-flex w-100 justify-content-between">
-        <h6 class="mb-1 fw-bold">Pedido #{{ pedido.id }}</h6>
-        <small>{{ pedido.data_pedido|timesince }} atrás</small>
+<div class="card order-card mb-3" 
+    data-bs-toggle="modal" 
+    data-bs-target="#actionModal"
+    hx-get="{% url 'restaurant:detalhes_pedido' pedido.id %}"
+    hx-target="#modal-content-wrapper">
+
+    <div class="card-body p-3">
+        <div class="d-flex justify-content-between mb-2">
+            <h6 class="card-title mb-0 fw-bold">#{{ pedido.id }}</h6>
+            <small class="text-muted">{{ pedido.data_pedido|timesince }}</small>
+        </div>
+        
+        <p class="card-text small mb-1">
+            <strong>Cliente:</strong> {{ pedido.cliente.get_full_name|default:pedido.cliente.username }}
+        </p>
+
+        <div class="items-list mb-2">
+            {% for item in pedido.itempedido_set.all %}
+                <span class="d-block small text-muted">{{ item.quantidade }}x {{ item.produto.nome }}</span>
+            {% endfor %}
+        </div>
+        
+        <p class="fw-bold fs-5 mb-0" style="color: var(--if-primary);">R$ {{ pedido.total_pedido|stringformat:".2f" }}</p>
     </div>
-    <p class="mb-1">
-        {% for item in pedido.itempedido_set.all %}
-            {{ item.quantidade }}x {{ item.produto.nome }}{% if not forloop.last %}, {% endif %}
-        {% endfor %}
-    </p>
-    <strong class="text-primary">R$ {{ pedido.total_pedido|stringformat:".2f" }}</strong>
-    {# --- BOTÕES DE AÇÃO CONDICIONAIS --- #}
-    {% if pedido.status == 'em_preparo' %}
-    <div class="mt-2 text-end">
-        <form hx-post="{% url 'restaurant:marcar_como_em_entrega' pedido.id %}" hx-target="#kanban-board" hx-swap="innerHTML" class="d-inline">
-            {% csrf_token %}
-            <button class="btn btn-info btn-sm">Pronto para Entrega →</button>
-        </form>
-    </div>
-    {% elif pedido.status == 'saiu_para_entrega' %}
-    <div class="mt-2 text-end">
-        <form hx-post="{% url 'restaurant:marcar_como_finalizado' pedido.id %}" hx-target="#kanban-board" hx-swap="innerHTML" class="d-inline">
-            {% csrf_token %}
-            <button class="btn btn-success btn-sm">Finalizar Pedido ✓</button>
-        </form>
-    </div>
-    {% endif %}
 </div>
-</a>

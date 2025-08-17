@@ -3,21 +3,73 @@
 {% block title %}Gestão de Pedidos{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="h3 mb-0">Gestão de Pedidos</h2>
-    <p class="text-muted mb-0">Acompanhe todos os pedidos em tempo real</p>
-</div>
+<header class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="h3 mb-0">Gestão de Pedidos</h2>
+        <p class="text-muted mb-0">Acompanhe todos os pedidos em tempo real</p>
+    </div>
+</header>
 
-<div id="kanban-board">
-    {% include 'restaurant/partials/_kanban_board_content.html' %}
-</div>
-
-<div class="modal fade" id="actionModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg"> {# Aumentamos o tamanho do modal #}
-    <div class="modal-content">
-      <div id="modal-content-wrapper">
+<section class="row g-3 mb-4">
+    <div class="col-lg-3 col-md-6">
+        <div class="summary-card">
+            <div class="icon bg-secondary text-white">📊</div>
+            <div>
+                <div class="value">{{ total_pedidos }}</div>
+                <div class="title">TOTAL ATIVO</div>
+            </div>
         </div>
     </div>
-  </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="summary-card">
+            <div class="icon bg-warning text-white">🔔</div>
+            <div>
+                <div class="value">{{ pedidos_solicitados.count }}</div>
+                <div class="title">SOLICITADOS</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="summary-card">
+            <div class="icon bg-info text-white">🍳</div>
+            <div>
+                <div class="value">{{ pedidos_em_preparo.count }}</div>
+                <div class="title">EM PREPARO</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="summary-card">
+            <div class="icon bg-primary text-white">🛵</div>
+            <div>
+                <div class="value">{{ pedidos_em_entrega.count }}</div>
+                <div class="title">EM ENTREGA</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="row" id="kanban-wrapper">
+    <div class="col-lg-3 col-md-6 mb-4">
+        <h5 class="mb-3 fw-bold">🔔 Solicitados</h5>
+        {% for pedido in pedidos_solicitados %}{% include 'restaurant/partials/_card_pedido.html' with pedido=pedido %}{% empty %}<div class="card card-body bg-light text-muted small">Nenhum pedido solicitado.</div>{% endfor %}
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <h5 class="mb-3 fw-bold">🍳 Em Preparo</h5>
+        {% for pedido in pedidos_em_preparo %}{% include 'restaurant/partials/_card_pedido.html' with pedido=pedido %}{% empty %}<div class="card card-body bg-light text-muted small">Nenhum pedido em preparo.</div>{% endfor %}
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <h5 class="mb-3 fw-bold">🛵 Saiu para Entrega</h5>
+        {% for pedido in pedidos_em_entrega %}{% include 'restaurant/partials/_card_pedido.html' with pedido=pedido %}{% empty %}<div class="card card-body bg-light text-muted small">Nenhum pedido em rota.</div>{% endfor %}
+    </div>
+    <div class="col-lg-3 col-md-6 mb-4">
+        <h5 class="mb-3 fw-bold">✅ Finalizados</h5>
+        {% for pedido in pedidos_finalizados %}{% include 'restaurant/partials/_card_pedido.html' with pedido=pedido %}{% empty %}<div class="card card-body bg-light text-muted small">Nenhum pedido finalizado.</div>{% endfor %}
+    </div>
+</section>
+
+<div class="modal fade" id="actionModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg"><div class="modal-content"><div id="modal-content-wrapper"></div></div></div>
 </div>
 {% endblock %}

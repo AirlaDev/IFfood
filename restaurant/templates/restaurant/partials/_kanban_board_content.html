@@ -1,9 +1,6 @@
 <div class="row">
     <div class="col-lg-3 col-md-6 mb-4">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <h5 class="fw-bold text-warning">Solicitados</h5>
-            <span class="badge bg-warning text-dark rounded-pill">{{ pedidos_solicitados.count }}</span>
-        </div>
+        <h5 class="fw-bold text-warning mb-2">Solicitados <span class="badge bg-warning text-dark rounded-pill">{{ pedidos_solicitados.count }}</span></h5>
         <div class="list-group">
             {% for pedido in pedidos_solicitados %}
                 {% include 'restaurant/partials/_card_pedido.html' with pedido=pedido %}
@@ -14,10 +11,7 @@
     </div>
 
     <div class="col-lg-3 col-md-6 mb-4">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <h5 class="fw-bold text-info">Em Preparo</h5>
-            <span class="badge bg-info text-dark rounded-pill">{{ pedidos_em_preparo.count }}</span>
-        </div>
+        <h5 class="fw-bold text-info mb-2">Em Preparo <span class="badge bg-info text-dark rounded-pill">{{ pedidos_em_preparo.count }}</span></h5>
         <div class="list-group">
             {% for pedido in pedidos_em_preparo %}
                 {% include 'restaurant/partials/_card_pedido.html' with pedido=pedido %}
@@ -28,10 +22,7 @@
     </div>
 
     <div class="col-lg-3 col-md-6 mb-4">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <h5 class="fw-bold text-primary">Saiu para Entrega</h5>
-            <span class="badge bg-primary rounded-pill">{{ pedidos_em_entrega.count }}</span>
-        </div>
+        <h5 class="fw-bold text-primary mb-2">Saiu para Entrega <span class="badge bg-primary rounded-pill">{{ pedidos_em_entrega.count }}</span></h5>
         <div class="list-group">
             {% for pedido in pedidos_em_entrega %}
                 {% include 'restaurant/partials/_card_pedido.html' with pedido=pedido %}
@@ -40,12 +31,9 @@
             {% endfor %}
         </div>
     </div>
-    
+
     <div class="col-lg-3 col-md-6 mb-4">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <h5 class="fw-bold text-success">Finalizados</h5>
-            <span class="badge bg-success rounded-pill">{{ pedidos_finalizados.count }}</span>
-        </div>
+        <h5 class="fw-bold text-success mb-2">Finalizados <span class="badge bg-success rounded-pill">{{ pedidos_finalizados.count }}</span></h5>
         <div class="list-group">
             {% for pedido in pedidos_finalizados %}
                 {% include 'restaurant/partials/_card_pedido.html' with pedido=pedido %}
