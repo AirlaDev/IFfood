@@ -1,49 +1,47 @@
-<div class="modal-header bg-primary text-white">
-    <h5 class="modal-title" id="modalLabel">Dados do Pedido #{{ pedido.id }}</h5>
-    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+<div class="modal-header">
+    <h5 class="modal-title">Detalhes do Pedido #{{ pedido.id }}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 </div>
 <div class="modal-body">
+    <!-- ... (conteúdo do corpo do modal) ... -->
     <h6>Informações do Cliente</h6>
     <p>{{ pedido.cliente.get_full_name|default:pedido.cliente.username }}</p>
-    {# Futuramente, aqui virão os campos de endereço e telefone #}
-
-    <h6 class="mt-4">Lista de Produtos</h6>
-    <table class="table table-sm">
-        <thead>
-            <tr>
-                <th>Produto</th>
-                <th class="text-center">Qtd</th>
-                <th class="text-end">Valor Unit.</th>
-                <th class="text-end">Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in pedido.itempedido_set.all %}
-            <tr>
-                <td>{{ item.produto.nome }}</td>
-                <td class="text-center">{{ item.quantidade }}</td>
-                <td class="text-end">R$ {{ item.produto.preco|stringformat:".2f" }}</td>
-                <td class="text-end">R$ {{ item.subtotal|stringformat:".2f" }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
     
-    <div class="text-end bg-light p-2 rounded">
-        Subtotal: R$ {{ pedido.total_pedido|stringformat:".2f" }} <br>
-        Taxa de Entrega: R$ 5.00 <br>
-        {# TOTAL CORRIGIDO #}
-        <strong class="fs-5">Total: R$ {{ pedido.total_pedido|add:"5.00"|stringformat:".2f" }}</strong>
+    <h6 class="mt-4">Itens do Pedido</h6>
+    <ul class="list-group">
+        {% for item in pedido.itempedido_set.all %}
+        <li class="list-group-item d-flex justify-content-between">
+            <span>{{ item.quantidade }}x {{ item.produto.nome }}</span>
+            <span>R$ {{ item.subtotal|stringformat:".2f" }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+    <div class="text-end mt-2">
+        <strong>Total: R$ {{ pedido.total_pedido|stringformat:".2f" }}</strong>
     </div>
 </div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-secondary">Imprimir</button>
-    <button type="button" class="btn btn-danger">Recusar Pedido</button>
-    <form hx-post="{% url 'restaurant:aceitar_pedido' pedido.id %}"
-          hx-target="#kanban-board"
-          hx-swap="innerHTML"
-          class="d-inline">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Aceitar Pedido</button>
-    </form>
+<div class="modal-footer justify-content-between">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+    
+    <!-- BOTÕES DE AÇÃO CONDICIONAIS -->
+    <div>
+        {% if pedido.status == 'solicitado' %}
+        <form hx-post="{% url 'restaurant:aceitar_pedido' pedido.id %}" hx-target="#kanban-wrapper" hx-swap="outerHTML" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Aceitar Pedido</button>
+            <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Imprimir</button>
+            <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Recusar Pedido</button>
+        </form>
+        {% elif pedido.status == 'em_preparo' %}
+        <form hx-post="{% url 'restaurant:marcar_como_em_entrega' pedido.id %}" hx-target="#kanban-wrapper" hx-swap="outerHTML" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Pronto para Entrega →</button>
+        </form>
+        {% elif pedido.status == 'saiu_para_entrega' %}
+        <form hx-post="{% url 'restaurant:marcar_como_finalizado' pedido.id %}" hx-target="#kanban-wrapper" hx-swap="outerHTML" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Finalizar Pedido ✓</button>
+        </form>
+        {% endif %}
+    </div>
 </div>

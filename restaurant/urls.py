@@ -5,12 +5,13 @@ from . import views
 app_name = 'restaurant'
 
 urlpatterns = [
+    
     # Autenticação
     path('login/', views.CustomLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
 
     # CRUD de Produtos (URLs simplificadas)
-    path('', views.visualizar_produto, name='visualizar_produto'),
+    path('produtos/', views.visualizar_produto, name='visualizar_produto'),
     path('produtos/adicionar/', views.adicionar_produto, name='adicionar_produto'),
     path('produtos/editar/<int:pk>/', views.editar_produto, name='editar_produto'),
     path('produtos/deletar/<int:pk>/', views.deletar_produto, name='deletar_produto'),
@@ -23,4 +24,7 @@ urlpatterns = [
     path('pedidos/aceitar/<int:pedido_id>/', views.aceitar_pedido, name='aceitar_pedido'),
     path('pedidos/em-entrega/<int:pedido_id>/', views.marcar_como_em_entrega, name='marcar_como_em_entrega'),
     path('pedidos/finalizado/<int:pedido_id>/', views.marcar_como_finalizado, name='marcar_como_finalizado'),
+
+    # Adicione esta linha no início do urlpatterns
+    path('dashboard/', views.dashboard, name='dashboard'),
 ]

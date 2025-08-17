@@ -6,6 +6,7 @@ class Produto(models.Model):
     descricao = models.TextField(verbose_name="Descrição")
     preco = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Preço")    
     ativo = models.BooleanField(default=True, verbose_name="Ativo")
+    imagem = models.ImageField(upload_to='produtos/', blank=True, null=True, verbose_name="Imagem")
 
     class Meta:
         verbose_name = "Produto"

@@ -10,13 +10,21 @@
             <small class="text-muted">{{ pedido.data_pedido|timesince }}</small>
         </div>
         
-        <p class="card-text small mb-1">
+        <p class.card-text small mb-1">
             <strong>Cliente:</strong> {{ pedido.cliente.get_full_name|default:pedido.cliente.username }}
         </p>
 
         <div class="items-list mb-2">
             {% for item in pedido.itempedido_set.all %}
-                <span class="d-block small text-muted">{{ item.quantidade }}x {{ item.produto.nome }}</span>
+                <span class="d-block small text-muted">
+                    {{ item.quantidade }}x 
+                    {# CORREÇÃO AQUI: Verifica se o produto existe antes de mostrar o nome #}
+                    {% if item.produto %}
+                        {{ item.produto.nome }}
+                    {% else %}
+                        <span class="text-danger">[Produto Removido]</span>
+                    {% endif %}
+                </span>
             {% endfor %}
         </div>
         
