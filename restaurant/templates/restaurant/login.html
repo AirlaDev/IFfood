@@ -14,8 +14,11 @@
             {% if form.errors %}
                 <div class="alert alert-danger">Seu nome de usuário e senha não correspondem. Por favor, tente novamente.</div>
             {% endif %}
+            
             <form method="post">
+                
                 {% csrf_token %}
+                
                 <div class="mb-3">
                     <label for="id_username" class="form-label">Usuário</label>
                     <input type="text" name="username" class="form-control" id="id_username" required>
@@ -26,6 +29,10 @@
                 </div>
                 <button type="submit" class="btn btn-primary w-100 mt-3">Entrar</button>
             </form>
+            
+            <div class="text-center mt-3">
+                <a href="#">Não tem uma conta? Cadastre-se</a>
+            </div>
         </div>
     </div>
 </body>

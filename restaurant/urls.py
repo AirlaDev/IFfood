@@ -8,6 +8,8 @@ urlpatterns = [
     
     # Autenticação
     path('login/', views.CustomLoginView.as_view(), name='login'),
+    # NOVA ROTA DE CADASTRO
+    path('cadastro/', views.cadastro_restaurante, name='cadastro'),
     path('logout/', LogoutView.as_view(), name='logout'),
 
     # CRUD de Produtos (URLs simplificadas)
@@ -27,4 +29,8 @@ urlpatterns = [
 
     # Adicione esta linha no início do urlpatterns
     path('dashboard/', views.dashboard, name='dashboard'),
+
+    # NOVAS ROTAS
+    path('pedidos/recusar/<int:pedido_id>/', views.recusar_pedido, name='recusar_pedido'),
+    path('pedidos/limpar-finalizados/', views.limpar_finalizados, name='limpar_finalizados'),
 ]

@@ -15,16 +15,15 @@ urlpatterns = [
     
     # Ações do Carrinho (HTMX)
     path('adicionar-ao-carrinho/<int:produto_id>/', views.adicionar_ao_carrinho, name='adicionar_ao_carrinho'),
-    
-    # URLS ATUALIZADAS E NOVAS
     path('atualizar-carrinho/<int:item_id>/', views.atualizar_carrinho, name='atualizar_carrinho'),
     path('remover-do-carrinho/<int:item_id>/', views.remover_do_carrinho, name='remover_do_carrinho'),
-    
-    # Partials para HTMX
     path('hx-contagem-carrinho/', views.hx_contagem_carrinho, name='hx_contagem_carrinho'),
 
+    # Pedidos
     path('finalizar-pedido/', views.finalizar_pedido, name='finalizar_pedido'),
-
-    # PÁGINA DE MEUS PEDIDOS
     path('meus-pedidos/', views.meus_pedidos, name='meus_pedidos'),
+    # NOVA ROTA PARA ACOMPANHAR O PEDIDO
+    path('pedido/<int:pedido_id>/acompanhar/', views.acompanhar_pedido, name='acompanhar_pedido'),
+
+    path('pedido/<int:pedido_id>/hx-status/', views.hx_acompanhar_pedido_status, name='hx_acompanhar_pedido_status'),
 ]

@@ -1,5 +1,21 @@
 from django import forms
 from .models import Produto
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+
+
+class RestauranteCreationForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = ('username', 'first_name', 'email')
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        # Marca o usuário como staff para dar acesso ao painel
+        user.is_staff = True
+        if commit:
+            user.save()
+        return user
 
 class ProdutoForm(forms.ModelForm):
     class Meta:
