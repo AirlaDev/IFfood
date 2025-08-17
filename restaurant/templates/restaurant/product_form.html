@@ -1,0 +1,36 @@
+{% extends "restaurant/base.html" %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<h2 class="h3 mb-4">{{ page_title }}</h2>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="{{ form.nome.id_for_label }}" class="form-label fw-bold">Nome</label>
+                {{ form.nome }}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.descricao.id_for_label }}" class="form-label fw-bold">Descrição</label>
+                {{ form.descricao }}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.preco.id_for_label }}" class="form-label fw-bold">Preço (R$)</label>
+                {{ form.preco }}
+            </div>
+             <div class="mb-3 form-check form-switch">
+                {{ form.ativo }}
+                <label for="{{ form.ativo.id_for_label }}" class="form-check-label">Ativo</label>
+            </div>
+
+            <hr class="my-4">
+
+            <a href="{% url 'visualizar_produto' %}" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

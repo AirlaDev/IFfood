@@ -1,0 +1,18 @@
+{% extends "restaurant/base.html" %}
+
+{% block title %}Confirmar Exclusão{% endblock %}
+
+{% block content %}
+<h2 class="h3 mb-4">Confirmar Exclusão</h2>
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <p>Você tem certeza que deseja excluir permanentemente o produto <strong>"{{ object.nome }}"</strong>?</p>
+        <p class="text-danger">Esta ação não pode ser desfeita.</p>
+        <form method="post">
+            {% csrf_token %}
+            <a href="{% url 'visualizar_produto' %}" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-danger">Sim, excluir</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

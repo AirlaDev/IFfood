@@ -1,0 +1,68 @@
+<div class="col-md-7 col-lg-8">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="d-flex justify-content-between align-items-center mb-0">
+                <span>Itens do Carrinho</span>
+                <span class="badge bg-primary rounded-pill">{{ pedido.total_itens|default:0 }}</span>
+            </h4>
+        </div>
+        <ul class="list-group list-group-flush">
+            {% for item in pedido.itempedido_set.all %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="my-0">{{ item.produto.nome }}</h6>
+                    <small class="text-muted">Preço Unitário: R$ {{ item.produto.preco|stringformat:".2f" }}</small>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <form hx-post="{% url 'store:atualizar_carrinho' item.id %}" hx-target="#cart-container" hx-swap="innerHTML" class="d-inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="dec">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">-</button>
+                    </form>
+                    <span class="mx-2">{{ item.quantidade }}</span>
+                    <form hx-post="{% url 'store:atualizar_carrinho' item.id %}" hx-target="#cart-container" hx-swap="innerHTML" class="d-inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="inc">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary">+</button>
+                    </form>
+
+                    <form hx-post="{% url 'store:remover_do_carrinho' item.id %}" hx-target="#cart-container" hx-swap="innerHTML" class="d-inline ms-3">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger">🗑️</button>
+                    </form>
+                </div>
+            </li>
+            {% empty %}
+            <li class="list-group-item">Seu carrinho está vazio.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<div class="col-md-5 col-lg-4">
+    <div class="card">
+        <div class="card-header"><h4 class="mb-0">Resumo do Pedido</h4></div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Subtotal</span>
+                    <strong>R$ {{ pedido.total_pedido|default:"0.00"|stringformat:".2f" }}</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Taxa de entrega</span>
+                    <span>R$ 5,00</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between bg-light">
+                    <span class="fw-bold">Total</span>
+                    <strong class="fw-bold">R$ {{ pedido.total_pedido|default:0|add:"5.00"|stringformat:".2f" }}</strong>
+                </li>
+            </ul>
+            <hr>
+            <form action="{% url 'store:finalizar_pedido' %}" method="post">
+                {% csrf_token %}
+                <button class="w-100 btn btn-primary btn-lg" type="submit">Finalizar Pedido</button>
+            </form>
+        </div>
+    </div>
+</div>

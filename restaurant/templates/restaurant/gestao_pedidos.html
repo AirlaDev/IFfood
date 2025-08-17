@@ -1,0 +1,23 @@
+{% extends "restaurant/base.html" %}
+
+{% block title %}Gestão de Pedidos{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="h3 mb-0">Gestão de Pedidos</h2>
+    <p class="text-muted mb-0">Acompanhe todos os pedidos em tempo real</p>
+</div>
+
+<div id="kanban-board">
+    {% include 'restaurant/partials/_kanban_board_content.html' %}
+</div>
+
+<div class="modal fade" id="actionModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg"> {# Aumentamos o tamanho do modal #}
+    <div class="modal-content">
+      <div id="modal-content-wrapper">
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

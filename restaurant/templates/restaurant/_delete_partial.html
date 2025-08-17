@@ -1,0 +1,15 @@
+{# CORRIGIDO AQUI (action e hx-post) #}
+<form method="post" action="{% url 'restaurant:deletar_produto' object.pk %}" hx-post="{% url 'restaurant:deletar_produto' object.pk %}">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title">Confirmar Exclusão</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+    </div>
+    <div class="modal-body">
+        <p>Você tem certeza que deseja excluir o produto <strong>"{{ object.nome }}"</strong>?</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-danger">Sim, excluir</button>
+    </div>
+</form>

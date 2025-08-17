@@ -1,0 +1,13 @@
+{% extends "store/base.html" %}
+{% block title %}Meu Carrinho - IFfood{% endblock %}
+
+{% block content %}
+<div class="my-4">
+    <h2>Meu Carrinho</h2>
+</div>
+
+{# Este container será o alvo de todas as atualizações do HTMX #}
+<div id="cart-container" class="row g-5">
+    {% include "store/partials/corpo_carrinho.html" %}
+</div>
+{% endblock %}

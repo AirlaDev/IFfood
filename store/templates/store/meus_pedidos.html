@@ -1,0 +1,44 @@
+{% extends "store/base.html" %}
+{% block title %}Meus Pedidos - IFfood{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center my-4">
+    <h2>Meus Pedidos</h2>
+</div>
+
+<div class="list-group">
+    {% for pedido in pedidos %}
+    <div class="list-group-item list-group-item-action flex-column align-items-start mb-3 shadow-sm rounded">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">Pedido #{{ pedido.id }}</h5>
+            <small>{{ pedido.data_pedido|date:"d/m/Y H:i" }}</small>
+        </div>
+        <p class="mb-1">
+            <strong>Itens:</strong>
+            {% for item in pedido.itempedido_set.all %}
+                {{ item.quantidade }}x {{ item.produto.nome }}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        </p>
+        <div class="d-flex w-100 justify-content-between align-items-center mt-2">
+            <strong class="text-primary fs-5">Total: R$ {{ pedido.total_pedido|add:"5.00"|stringformat:".2f" }}</strong>
+            <div>
+                <strong>Status: </strong>
+                {% if pedido.status == 'solicitado' %}
+                    <span class="badge bg-warning text-dark">Aguardando Confirmação</span>
+                {% elif pedido.status == 'em_preparo' %}
+                    <span class="badge bg-info text-dark">Em Preparo</span>
+                {% elif pedido.status == 'saiu_para_entrega' %}
+                    <span class="badge bg-primary">Saiu para Entrega</span>
+                {% elif pedido.status == 'entregue' %}
+                    <span class="badge bg-success">Entregue</span>
+                {% else %}
+                    <span class="badge bg-danger">Cancelado</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="alert alert-info">Você ainda não fez nenhum pedido.</div>
+    {% endfor %}
+</div>
+{% endblock %}

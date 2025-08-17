@@ -1,0 +1,46 @@
+{% extends "store/base.html" %}
+
+{% block content %}
+<div class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-white shadow-sm">
+    <div class="col-lg-8 px-0">
+      <h1 class="display-4 fst-italic">Os Sabores que Você Ama, à Distância de um Clique</h1>
+      <p class="lead my-3">Explore os cardápios dos melhores restaurantes da região e receba seus pratos favoritos no conforto da sua casa.</p>
+    </div>
+</div>
+
+<h2 class="pb-2 border-bottom">Nossos Produtos</h2>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 py-4">
+    {% for produto in produtos %}
+    <div class="col">
+        <div class="card shadow-sm h-100 product-card">
+            {% if produto.imagem %}
+                <img src="{{ produto.imagem.url }}" class="card-img-top product-card-img" alt="{{ produto.nome }}">
+            {% else %}
+                <img src="https://placehold.co/600x400/f8633e/FFFFFF?text={{ produto.nome|slice:':1' }}" class="card-img-top product-card-img" alt="Imagem de {{ produto.nome }}">
+            {% endif %}
+            
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{ produto.nome }}</h5>
+                <p class="card-text small text-muted flex-grow-1">{{ produto.descricao }}</p>
+                <div class="d-flex justify-content-between align-items-center mt-auto pt-2">
+                    <span class="fs-5 fw-bold text-primary">R$ {{ produto.preco|stringformat:".2f" }}</span>
+                    {% if user.is_authenticated %}
+                        <button class="btn btn-sm btn-primary"
+                                hx-post="{% url 'store:adicionar_ao_carrinho' produto.id %}"
+                                hx-target="#cart-button"
+                                hx-swap="innerHTML"
+                                hx-trigger="click"
+                                _="on htmx:afterRequest trigger itemAdicionado">
+                            + Adicionar
+                        </button>
+                    {% else %}
+                        <a href="{% url 'store:login' %}" class="btn btn-sm btn-primary">+ Adicionar</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

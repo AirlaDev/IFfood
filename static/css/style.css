@@ -1,0 +1,146 @@
+:root {
+    --if-primary: #f8633e; /* Laranja da imagem */
+    --if-primary-dark: #e8532e;
+    --if-secondary: #f8f9fa;
+    --if-background: #f4f5f7;
+    --if-text: #333;
+    --if-text-light: #777;
+    --if-success: #28a745;
+    --if-danger: #dc3545;
+    --if-white: #fff;
+    --if-border: #dee2e6;
+}
+
+body {
+    background-color: var(--if-background);
+    color: var(--if-text);
+    font-family: 'Poppins', sans-serif;
+}
+
+/* --- Layout Principal --- */
+.sidebar {
+    background-color: var(--if-white);
+    min-height: 100vh;
+    border-right: 1px solid var(--if-border);
+}
+.sidebar .nav-link {
+    color: var(--if-text-light);
+    font-weight: 500;
+}
+.sidebar .nav-link.active, .sidebar .nav-link:hover {
+    color: var(--if-primary);
+    background-color: #ffeadd;
+    border-radius: 8px;
+}
+
+/* --- Botões --- */
+.btn-primary {
+    background-color: var(--if-primary);
+    border-color: var(--if-primary);
+    font-weight: 600;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+}
+.btn-primary:hover {
+    background-color: var(--if-primary-dark);
+    border-color: var(--if-primary-dark);
+}
+
+/* --- Cards de Produto --- */
+.card-product {
+    background-color: var(--if-white);
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+}
+.card-product:hover {
+    transform: translateY(-5px);
+}
+.card-product-actions a {
+    margin-right: 0.5rem;
+}
+
+/* --- Formulários --- */
+.form-control, .form-select {
+    border-radius: 8px;
+    padding: 0.75rem;
+}
+.form-control:focus {
+    border-color: var(--if-primary);
+    box-shadow: 0 0 0 0.25rem rgba(248, 99, 62, 0.25);
+}
+
+/* Paleta de Cores e Configurações Globais */
+:root {
+    --if-primary: #f8633e; /* Laranja principal, inspirado nas imagens */
+    --if-primary-dark: #e8532e;
+    --bs-primary: var(--if-primary);
+    --bs-primary-rgb: 248, 99, 62;
+    --bs-link-color-rgb: 248, 99, 62;
+    --bs-link-hover-color-rgb: 232, 83, 46;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* --- Componentes do Restaurante --- */
+.sidebar {
+    background-color: #fff;
+    min-height: 100vh;
+    border-right: 1px solid #dee2e6;
+}
+.sidebar .nav-link {
+    color: #777;
+    font-weight: 500;
+}
+.sidebar .nav-link.active, .sidebar .nav-link:hover {
+    color: var(--if-primary);
+    background-color: #ffeadd;
+    border-radius: 8px;
+}
+
+/* --- ESTILOS MODERNOS PARA A LOJA DO CLIENTE --- */
+
+/* Ajustes no botão primário */
+.btn-primary {
+    background-color: var(--if-primary);
+    border-color: var(--if-primary);
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: background-color 0.2s ease-in-out;
+}
+.btn-primary:hover {
+    background-color: var(--if-primary-dark);
+    border-color: var(--if-primary-dark);
+}
+
+/* Estilos para os Cards de Produto */
+.product-card {
+    border: none;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
+}
+
+.product-card-img {
+    height: 200px;
+    object-fit: cover; /* Garante que a imagem cubra a área sem distorcer */
+}
+
+/* Ícone do Carrinho */
+#cart-button .badge {
+    font-size: 0.6em;
+    padding: 0.3em 0.5em;
+}
+
+/* Ajustes gerais */
+.form-control:focus {
+    border-color: var(--if-primary);
+    box-shadow: 0 0 0 0.25rem rgba(248, 99, 62, 0.25);
+}
