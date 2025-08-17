@@ -4,29 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}RestaurantePro{% endblock %}</title>
-    
+    <title>{% block title %}IFfood Admin{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
     {% block extra_css %}{% endblock %}
 </head>
-<body>
+<body class="d-flex flex-column vh-100">
 
-    <div class="d-flex vh-100">
-
+    <div class="d-flex flex-grow-1 overflow-hidden">
         <aside class="sidebar d-flex flex-column flex-shrink-0 p-3 bg-white">
-            <a href="{% url 'restaurant:visualizar_produto' %}" class="d-flex align-items-center mb-4 text-dark text-decoration-none">
-                <span class="fs-4 fw-bold">RestaurantePro</span>
+            <a href="{% url 'restaurant:dashboard' %}" class="d-flex align-items-center mb-4 text-dark text-decoration-none">
+                <span class="fs-4 fw-bold">🛵 IFfood</span>
             </a>
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item mb-2">
-                    <a href="#" class="nav-link">Dashboard</a>
+                    <a href="{% url 'restaurant:dashboard' %}" class="nav-link {% if 'dashboard' in request.resolver_match.view_name %}active{% endif %}">
+                        Dashboard
+                    </a>
                 </li>
                 <li class="nav-item mb-2">
                     <a href="{% url 'restaurant:visualizar_produto' %}" class="nav-link {% if 'produto' in request.resolver_match.view_name %}active{% endif %}">
@@ -56,9 +50,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    
     {% block extra_js %}{% endblock %}
 </body>
 </html>

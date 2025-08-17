@@ -6,6 +6,11 @@ from django.http import JsonResponse
 from .models import Produto
 from .forms import ProdutoForm
 from store.models import Pedido
+from django.http import HttpResponse
+from django.utils import timezone
+from django.db.models import Count, Sum
+from store.models import ItemPedido
+import json
 
 # --- AUTENTICAÇÃO (sem alterações) ---
 class CustomLoginView(LoginView):
@@ -25,15 +30,12 @@ def adicionar_produto(request):
         form = ProdutoForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return JsonResponse({'success': True})
-        return JsonResponse({'success': False, 'errors': form.errors})
-    
-    form = ProdutoForm()
-    context = {
-        'form': form,
-        'page_title': 'Adicionar Novo Produto',
-        'action_url': request.path
-    }
+            response = HttpResponse(status=204)
+            response['HX-Refresh'] = 'true'
+            return response
+    else:
+        form = ProdutoForm()
+    context = {'form': form, 'page_title': 'Adicionar Produto'}
     return render(request, 'restaurant/partials/_form_partial.html', context)
 
 @login_required
@@ -43,24 +45,29 @@ def editar_produto(request, pk):
         form = ProdutoForm(request.POST, request.FILES, instance=produto)
         if form.is_valid():
             form.save()
-            return JsonResponse({'success': True})
-        return JsonResponse({'success': False, 'errors': form.errors})
-    
-    form = ProdutoForm(instance=produto)
-    context = {
-        'form': form,
-        'page_title': 'Editar Produto',
-        'action_url': request.path
-    }
+            response = HttpResponse(status=204)
+            response['HX-Refresh'] = 'true'
+            return response
+    else:
+        form = ProdutoForm(instance=produto)
+    context = {'form': form, 'page_title': 'Editar Produto'}
     return render(request, 'restaurant/partials/_form_partial.html', context)
 
 @login_required
 def deletar_produto(request, pk):
+    # Busca o produto ou retorna um erro 404 se não existir
     produto = get_object_or_404(Produto, pk=pk)
+
+    # Se a requisição for do tipo POST (envio do formulário de exclusão)
     if request.method == 'POST':
         produto.delete()
-        return JsonResponse({'success': True})
-    
+        # Prepara uma resposta vazia (status 204)
+        response = HttpResponse(status=204)
+        # Adiciona o cabeçalho que o HTMX usa para recarregar a página
+        response['HX-Refresh'] = 'true'
+        return response
+
+    # Se a requisição for GET, apenas mostra o modal de confirmação
     context = {'object': produto}
     return render(request, 'restaurant/partials/_delete_partial.html', context)
 
@@ -122,3 +129,33 @@ def marcar_como_finalizado(request, pedido_id):
     pedido.status = 'entregue'
     pedido.save()
     return _recarregar_kanban(request)
+
+@login_required
+def dashboard(request):
+    today = timezone.now().date()
+    current_month = today.month
+    current_year = today.year
+
+    # Pedidos por período
+    pedidos_hoje = Pedido.objects.filter(data_pedido__date=today).count()
+    pedidos_mes = Pedido.objects.filter(data_pedido__year=current_year, data_pedido__month=current_month).count()
+    pedidos_ano = Pedido.objects.filter(data_pedido__year=current_year).count()
+
+    # Produtos mais pedidos (Top 5)
+    produtos_mais_pedidos = ItemPedido.objects.values('produto__nome') \
+        .annotate(total_vendido=Sum('quantidade')) \
+        .order_by('-total_vendido')[:5]
+
+    # Prepara dados para o gráfico
+    chart_labels = [item['produto__nome'] for item in produtos_mais_pedidos]
+    chart_data = [item['total_vendido'] for item in produtos_mais_pedidos]
+
+    context = {
+        'pedidos_hoje': pedidos_hoje,
+        'pedidos_mes': pedidos_mes,
+        'pedidos_ano': pedidos_ano,
+        'produtos_mais_pedidos': produtos_mais_pedidos,
+        'chart_labels': json.dumps(chart_labels),
+        'chart_data': json.dumps(chart_data),
+    }
+    return render(request, 'restaurant/dashboard.html', context)
